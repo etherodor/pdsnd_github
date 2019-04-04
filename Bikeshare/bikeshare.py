@@ -39,6 +39,7 @@ def get_filters():
     print('-'*40)
     return chosen_city, chosen_month, chosen_day
     #testcomment
+    #second test comment
 
 def load_data(chosen_city, chosen_month, chosen_day):
     """
