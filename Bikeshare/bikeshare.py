@@ -12,94 +12,43 @@ print('Hello! Let\'s explore some US bikeshare data!')
 def get_filters():
 
     #choose the filters:
-    chosen_city = input('choose a city from either Chicago, New York City or Washington: ').title()
-    possible_cities = ['Chicago', 'New York City', 'Washington']
+
+    chosen_city = input('choose a city from either Chicago, New York or Washington: ').title()
+    possible_cities = ['Chicago', 'New York', 'Washington']
     while chosen_city in possible_cities :
         break
     else: chosen_city = input('that was not a correct city. Which city do you want? ')
 
     print('you chose the city ', chosen_city)
         # TO DO: get user input for month (all, january, february, ... , june)
+    possible_months = ['January', 'February', 'March', 'April', 'May', 'June']
+    chosen_month = input('Now choose a month from January - June: ').title()
+    while chosen_month in possible_months :
+        break
+    else: chosen_month = input('that was not a correct month. Which month do you want? ')
+    print('you chose the month ', chosen_month)
 
-    chosen_month = ''
-    filter_month = input('do you want to filter by month? yes / no ').lower()
-    while filter_month != 'no':
-        if filter_month == 'yes':
-            possible_months = ['January', 'February', 'March', 'April', 'May', 'June']
-            chosen_month = input('Now choose a month from January - June: ').title()
-            while chosen_month not in possible_months:
-                chosen_month = input('that was not a correct month. Which month do you want (January - June)? ').title()
-            break
-        if filter_month == 'no':
-            break
-        else: filter_month = input('I did not understand. Yes or no?').lower()
-    if filter_month == 'no':
-        print('no month-filter applied')
         # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
-
-    chosen_day = ''
-    day_filter = input('do you want to filter by day? yes / no ').lower()
-    while day_filter != 'no':
-        if day_filter == 'yes':
-            possible_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-            chosen_day = input('Now choose a day from Monday - Sunday: ').title()
-            while chosen_day not in possible_days:
-                chosen_day = input('That was no correct day. Please choose a day: ').title()
-            break
-        if day_filter == 'no':
-            break
-        else: day_filter = input('I did not understand. Yes or no?').lower()
-    if day_filter == 'no':
-            print('no day-filter applied')
+    possible_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    chosen_day = input('Now choose a day from Monday - Sunday: ').title()
+    while chosen_day in possible_days :
+        break
+    else: chosen_day = input('that was not a correct day. Which day do you want? ')
+    print('you chose the day ', chosen_day)
 
     print('-'*40)
-
     return chosen_city, chosen_month, chosen_day
 
 def load_data(chosen_city, chosen_month, chosen_day):
-
     """
         df - Pandas DataFrame containing city data filtered by month and day
     """
-    #open the correct city table
-    df = pd.read_csv(CITY_DATA[chosen_city.lower()])
-    #now filter for the month
-    df['Start Time'] = pd.to_datetime(df['Start Time'])
-    df['month'] = df['Start Time'].dt.month #is a number from 1-6
-    df['day_of_week'] = df['Start Time'].dt.weekday_name # is the name of the week (e.g. Sunday)
-
-    month_dict = {
-    'January' : 1,
-    'February' : 2,
-    'March' : 3,
-    'April' : 4,
-    'May' : 5,
-    'June': 6,
-    }
-
-    if chosen_month != '':
-        is_month = df['month']== month_dict[chosen_month]
-        df = df[is_month]
-
-    #now filter for the day
-    if chosen_day != '':
-        is_day = df['day_of_week']== chosen_day
-        df = df[is_day]
-
+    chosen_city = chosen_city.lower()
+    df = pd.read_csv(CITY_DATA[chosen_city])
     return df
 
-def time_stats(df):
-    show_data = 'not yet'
-    while show_data != 'yes':
-        show_data = input('Do you want to see the first 5 lines of the data as an example? yes / no ')
-        if show_data == 'yes':
-            print(df.head())
-            break
-        if show_data == 'no':
-            break
-        else:
-            show_data = input('what now? ')
 
+def time_stats(df):
     """Displays statistics on the most frequent times of travel."""
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
@@ -174,23 +123,12 @@ def trip_duration_stats(df):
     #triptime = df['Duration']
     print('*' * 40)
 
-    trip_hour = int(df['Trip Duration'].sum()/3600)
-    trip_minutes = round(((df['Trip Duration'].sum() - (trip_hour * 3600)) / 60),2)
-
-    print('The total trip durations are {} hours, and {} minutes'.format(trip_hour, trip_minutes))
+    tripduration = df['Trip Duration'].sum()
+    print('the total trip duration is ', df['Trip Duration'].sum(), ' seconds.')
 
     # TO DO: display mean travel time
-    mean_triptime = int(df['Trip Duration'].mean()/60)
-    print('The mean trip duration is ', mean_triptime, 'minutes')
-
-    std_triptime = int(np.std(df['Trip Duration'])/60)
-    print('The std of the trip duration is ', std_triptime, ' minutes')
-
-    max_triptime = round(df['Trip Duration'].max() / 60,2)
-    print('The longest trip was ', max_triptime, ' minutes')
-
-    min_triptime = round(df['Trip Duration'].min() / 60,2)
-    print('The shortest trip was ', min_triptime, ' minutes')
+    #mean_triptime = df['Trip Duration'].mean()
+    print('the mean trip duration is ', df['Trip Duration'].mean(), 'seconds')
 
 def user_stats(df):
     """Displays statistics on bikeshare users."""
@@ -199,35 +137,25 @@ def user_stats(df):
     start_time = time.time()
 
     # TO DO: Display counts of user types
-    user_types = df['User Type'].value_counts()
-    print(user_types)
+    #user_types = df['User Type'].value_counts() - deleted this for the last project
+    print(df['User Type'].value_counts())
 
     # TO DO: Display counts of gender
-    if 'Gender' in df:
-        gender = df['Gender'].value_counts()
-        print(gender)
-    else:
-        print('\nThere is no gender data in this table')
+    #gender = df['Gender'].value_counts() - deleted this for the last project
+    print(df['Gender'].value_counts())
 
     # TO DO: Display earliest, most recent, and most common year of birth
 
+    birthyear = df['Birth Year']
     # earliest
-    if 'Birth Year' in df:
-
-        df['Birth Year'] = df['Birth Year'].fillna((df['Birth Year'].mean()))
-
-        ear_birthyear = min(df['Birth Year'])
-        print('\nThe oldest person using our bikes is from the year ',int(ear_birthyear))
-        # most recent
-        mr_birthyear = max(df['Birth Year'])
-        print('The youngest person using our bikes is from the year ', int(mr_birthyear))
-        # most common
-        mc_birthyear = df['Birth Year'].mode()[0]
-        print('The most common birth year is ', int(mc_birthyear))
-
-    else:
-        print('\nThere is no birth year data in this table')
-
+    ear_birthyear = int(min(birthyear))
+    print('\nThe oldest person using our bikes is from the year ',ear_birthyear)
+    # most recent
+    mr_birthyear = int(max(birthyear))
+    print('The youngest person using our bikes is from the year ', mr_birthyear)
+    # most common
+    mc_birthyear = int(df['Birth Year'].mode()[0])
+    print('The most common birth year is ', mc_birthyear)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
 #run all the defined functions down here
