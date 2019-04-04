@@ -1,14 +1,16 @@
 ### Date created
-Include the date you created this project and README file.
+Readme file was created on the 04/04/2019
+Bikeshare.py file was created on  03/04/2019
 
 ### Project Title
-Replace the Project Title
+Bikeshare Data
 
 ### Description
-Describe what your project is about and what it does
+Conducts data analysis for the management to conduct easy and hands on analyses for a better insight
 
 ### Files used
-Include the files used
+Bikeshare data
+CSV files with the bikeshare raw data used for the python file
 
 ### Credits
-It's important to give proper credit. Add links to any repo that inspired you or blogposts you consulted.
+Thank you to all the facilitators of Udacity for creating this amazing learning opporunity
